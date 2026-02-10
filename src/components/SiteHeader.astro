@@ -50,30 +50,29 @@ const initialQuery = Astro.url.searchParams.get("q") ?? "";
       </nav>
     </div>
 
-    <form
-      class="header-search"
-      role="search"
-      action={searchHref}
-      method="get"
-      data-header-search
-      data-index-url={searchIndexUrl}
-      data-empty-label={isZh ? "无匹配文章" : "No matches"}
-    >
-      <input
-        type="search"
-        name="q"
-        value={initialQuery}
-        placeholder={isZh ? "搜索文章..." : "Search posts..."}
-        aria-label={isZh ? "搜索文章" : "Search posts"}
-        autocomplete="off"
-        data-header-search-input
-      />
-      <div class="header-search-panel" data-header-search-panel hidden>
-        <ul class="header-search-list" data-header-search-list></ul>
-      </div>
-    </form>
-
     <div class="header-right">
+      <form
+        class="header-search"
+        role="search"
+        action={searchHref}
+        method="get"
+        data-header-search
+        data-index-url={searchIndexUrl}
+        data-empty-label={isZh ? "无匹配文章" : "No matches"}
+      >
+        <input
+          type="search"
+          name="q"
+          value={initialQuery}
+          placeholder={isZh ? "搜索文章..." : "Search posts..."}
+          aria-label={isZh ? "搜索文章" : "Search posts"}
+          autocomplete="off"
+          data-header-search-input
+        />
+        <div class="header-search-panel" data-header-search-panel hidden>
+          <ul class="header-search-list" data-header-search-list></ul>
+        </div>
+      </form>
       <label class="lang-switch" for="lang-switcher">
         <select id="lang-switcher" data-lang-switch aria-label="Language switcher">
           <option value="en-US" selected={locale === "en-US"}>

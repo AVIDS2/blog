@@ -23,20 +23,8 @@ const latestMore = latestPosts.slice(1);
   title="DWILL Blog"
   description="A static engineering blog focused on performance, architecture, and long-term maintainability."
 >
-  <section class="home-intro" aria-label="Homepage intro">
-    <p class="home-intro-badge">Static Blog System</p>
-    <h1>The Foundation for Your Writing System</h1>
-    <p>
-      Lightweight, migration-friendly, and built for long-term publishing. Deploy on Cloudflare now, move to VPS later.
-    </p>
-    <div class="home-intro-actions">
-      <a class="header-cta" href="/en/posts/">Get Started</a>
-      <a class="home-intro-link" href="/en/about/">View Architecture</a>
-    </div>
-  </section>
-
   <section class="home-hero-wrap">
-    <HeroEffectHost effect={heroEffects.active} />
+    <HeroEffectHost effect={heroEffects.active} locale={locale} />
   </section>
 
   <div class="home-content-shell">

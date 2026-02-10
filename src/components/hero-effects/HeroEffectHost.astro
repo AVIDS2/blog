@@ -2,19 +2,20 @@
 import type { HeroEffectName } from "../../config/hero-effects";
 import ParticleFunnelHero from "./ParticleFunnelHero.astro";
 import StaticMinimalHero from "./StaticMinimalHero.astro";
+import type { SiteLocale } from "../../utils/i18n";
 
 interface Props {
   effect: HeroEffectName;
+  locale?: SiteLocale;
 }
 
-const { effect } = Astro.props;
+const { effect, locale = "zh-CN" } = Astro.props;
 ---
 
 {
   effect === "particle-funnel" ? (
-    <ParticleFunnelHero />
+    <ParticleFunnelHero locale={locale} />
   ) : (
     <StaticMinimalHero />
   )
 }
-

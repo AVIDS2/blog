@@ -23,20 +23,8 @@ const latestMore = latestPosts.slice(1);
   title="DWILL Blog"
   description="极简架构，高级质感，极致性能。A static engineering blog built for speed and long-term maintainability."
 >
-  <section class="home-intro" aria-label="Homepage intro">
-    <p class="home-intro-badge">静态博客系统</p>
-    <h1>为长期写作而生的系统底座</h1>
-    <p>
-      轻量、可迁移、可长期维护。现在部署在 Cloudflare，未来迁移 VPS 仍保持同一套产物与 URL 结构。
-    </p>
-    <div class="home-intro-actions">
-      <a class="header-cta" href="/posts/">开始阅读</a>
-      <a class="home-intro-link" href="/about/">查看架构</a>
-    </div>
-  </section>
-
   <section class="home-hero-wrap">
-    <HeroEffectHost effect={heroEffects.active} />
+    <HeroEffectHost effect={heroEffects.active} locale={locale} />
   </section>
 
   <div class="home-content-shell">

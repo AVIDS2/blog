@@ -1,3 +1,14 @@
+﻿---
+import type { SiteLocale } from "../../utils/i18n";
+
+interface Props {
+  locale?: SiteLocale;
+}
+
+const { locale = "zh-CN" } = Astro.props;
+const isEn = locale === "en-US";
+---
+
 <section class="hero-stage" data-hero-root>
   <canvas class="hero-canvas" data-hero-canvas aria-hidden="true"></canvas>
 
@@ -7,21 +18,30 @@
     <span>OVER THE </span><strong>RAINBOW</strong>
   </p>
 
+  <article class="hero-copy-card" data-hero-copy>
+    <h1>Let's Build , let's Realize</h1>
+    <p>{isEn ? "From idea to reality, changing the world with code." : "从想法到现实，用代码改变世界。"}</p>
+    <div class="hero-copy-actions">
+      <a class="header-cta" href={isEn ? "/en/posts/" : "/posts/"}>{isEn ? "Get Started" : "开始阅读"}</a>
+      <a class="home-intro-link" href={isEn ? "/en/about/" : "/about/"}>{isEn ? "View Architecture" : "查看架构"}</a>
+    </div>
+  </article>
+
   <div class="hero-action-grid" data-hero-actions>
     <article>
       <h2>MISSION</h2>
-      <p>博客首页</p>
-      <a href="/about/">GO</a>
+      <p>{isEn ? "Blog Home" : "博客首页"}</p>
+      <a href={isEn ? "/en/" : "/"}>GO</a>
     </article>
     <article class="is-primary">
       <h2>IDENTITY</h2>
-      <p>内容与系统</p>
-      <a href="/posts/">GO</a>
+      <p>{isEn ? "Content & System" : "内容与系统"}</p>
+      <a href={isEn ? "/en/posts/" : "/posts/"}>GO</a>
     </article>
     <article>
       <h2>SOLUTION</h2>
-      <p>Markdown 写作</p>
-      <a href="/tags/">GO</a>
+      <p>{isEn ? "Markdown Writing" : "Markdown 写作"}</p>
+      <a href={isEn ? "/en/tags/" : "/tags/"}>GO</a>
     </article>
   </div>
 
@@ -30,8 +50,9 @@
       const root = document.querySelector("[data-hero-root]");
       const canvas = root?.querySelector("[data-hero-canvas]");
       const actionGrid = root?.querySelector("[data-hero-actions]");
+      const heroCopy = root?.querySelector("[data-hero-copy]");
       const fallbackTitle = root?.querySelector("[data-hero-fallback-title]");
-      if (!root || !canvas || !actionGrid || !fallbackTitle) return;
+      if (!root || !canvas || !actionGrid || !heroCopy || !fallbackTitle) return;
 
       const actionItems = Array.from(actionGrid.querySelectorAll("article"));
 
@@ -39,6 +60,7 @@
       if (mediaReduce.matches) {
         root.classList.add("is-reduced");
         fallbackTitle.classList.add("is-visible");
+        heroCopy.classList.add("is-visible");
         actionGrid.classList.add("is-visible");
         actionItems.forEach((item) => item.classList.add("is-on"));
         return;
@@ -48,6 +70,7 @@
       if (!ctx) {
         root.classList.add("is-reduced");
         fallbackTitle.classList.add("is-visible");
+        heroCopy.classList.add("is-visible");
         actionGrid.classList.add("is-visible");
         actionItems.forEach((item) => item.classList.add("is-on"));
         return;
@@ -157,19 +180,23 @@
         }
 
         const stride = Math.max(1, Math.floor(points.length / MAX_TEXT_PARTICLES));
-        const scatterRadius = Math.min(width, height) * 0.66;
-        const scatterXMax = Math.max(140, width * 0.48);
-        const scatterYMax = Math.max(90, height * 0.36);
         const edgeGutter = Math.max(EDGE_GUTTER_MIN, width * 0.03);
-        const maxBurstRadius = Math.max(120, cx - edgeGutter);
+        const scatterRadiusXMax = Math.max(160, cx - edgeGutter - 10);
+        const scatterRadiusYMax = Math.max(130, cy - edgeGutter - 10);
+        const burstRadiusXMax = Math.max(120, cx - edgeGutter - 8);
+        const burstRadiusYMax = Math.max(88, cy - edgeGutter - 12);
 
         for (let i = 0; i < points.length; i += stride) {
           const p = points[i];
           const angle = randomRange(0, Math.PI * 2);
-          const radial = scatterRadius * randomRange(0.72, 1.18);
+          const scatterSpread = Math.sqrt(randomRange(0.08, 1));
+          const scatterRadiusX = scatterRadiusXMax * scatterSpread;
+          const scatterRadiusY = scatterRadiusYMax * scatterSpread * randomRange(0.92, 1.06);
           const nx = ((p.x - minX) / Math.max(1, maxX - minX)) * 2 - 1;
           const burstAngle = randomRange(0, Math.PI * 2);
-          const burstRadius = randomRange(maxBurstRadius * 0.36, maxBurstRadius * 0.98);
+          const burstSpread = randomRange(0.5, 0.98);
+          const burstRadiusX = burstRadiusXMax * burstSpread;
+          const burstRadiusY = burstRadiusYMax * burstSpread * randomRange(0.92, 1.05);
 
           const sizeBucket = weightedPick([
             { w: 0.82, min: 0.68, max: 1.45 },
@@ -185,27 +212,21 @@
             seed: randomRange(0, Math.PI * 2),
             nx,
             ny: (p.y - cy) / Math.max(1, height * 0.35),
-            scatterX: cx + Math.cos(angle) * radial * 1.45,
-            scatterY: cy + Math.sin(angle) * radial * 0.72,
+            scatterX: cx + Math.cos(angle) * scatterRadiusX,
+            scatterY: cy + Math.sin(angle) * scatterRadiusY,
             centerX: cx + randomRange(-6, 6),
             centerY: cy + randomRange(-6, 6),
-            burstX: cx + Math.cos(burstAngle) * burstRadius,
-            burstY: cy + Math.sin(burstAngle) * burstRadius * 0.9,
+            burstX: cx + Math.cos(burstAngle) * burstRadiusX,
+            burstY: cy + Math.sin(burstAngle) * burstRadiusY,
             square: Math.random() > 0.25,
           });
-        }
-
-        for (let i = 0; i < textParticles.length; i += 1) {
-          const p = textParticles[i];
-          p.scatterX = clamp(p.scatterX, cx - scatterXMax, cx + scatterXMax);
-          p.scatterY = clamp(p.scatterY, cy - scatterYMax, cy + scatterYMax);
         }
       }
 
       function buildAmbientParticles() {
         ambientParticles.length = 0;
         const edgeGutter = Math.max(EDGE_GUTTER_MIN, width * 0.03);
-        const maxAmbientRadius = Math.max(100, cx - edgeGutter);
+        const maxAmbientRadius = Math.max(100, Math.min(cx - edgeGutter, cy - edgeGutter) * 0.96);
         for (let i = 0; i < AMBIENT_COUNT; i += 1) {
           const sizeBucket = weightedPick([
             { w: 0.74, min: 1.1, max: 2.8 },
@@ -472,8 +493,13 @@
           const perspective = lerp(0.62, 1.34, clamp(z, 0, 1));
           const rawDX = Math.cos(angle) * radius * perspective;
           const rawDY = Math.sin(angle) * radius * 0.32 * perspective + p.drift;
-          const x = cx + clamp(rawDX, -maxDX, maxDX);
-          const y = cy + clamp(rawDY, -maxDY, maxDY);
+
+          // Soft-limit to avoid hard edge stacking (which creates straight bands).
+          const overX = Math.abs(rawDX) / Math.max(1, maxDX);
+          const overY = Math.abs(rawDY) / Math.max(1, maxDY);
+          const compress = 1 / Math.max(1, overX, overY);
+          const x = cx + rawDX * compress;
+          const y = cy + rawDY * compress;
           const size = p.size * perspective;
           const alpha = p.alpha * lerp(0.55, 1, clamp(z, 0, 1));
 
@@ -519,15 +545,17 @@
         const settledMode = elapsed >= CYCLE_MS;
         const phase = settledMode ? P4 : clamp(elapsed / CYCLE_MS, 0, 1);
 
-        const showActions = phase >= 0.82;
+        const showActions = phase >= 0.79;
+        const showHeroCopy = phase >= 0.2;
         const cardProgress = clamp((phase - 0.79) / 0.14, 0, 1);
         fallbackTitle.classList.remove("is-visible");
         fallbackTitle.style.opacity = "0";
 
+        heroCopy.classList.toggle("is-visible", showHeroCopy);
         actionGrid.classList.toggle("is-visible", showActions);
+        const thresholds = [0, 0.33, 0.66];
         actionItems.forEach((item, index) => {
-          const threshold = index * 0.28;
-          item.classList.toggle("is-on", showActions && cardProgress > threshold);
+          item.classList.toggle("is-on", showActions && cardProgress >= (thresholds[index] ?? 1));
         });
 
         ctx.clearRect(0, 0, width, height);
@@ -586,3 +614,5 @@
     })();
   </script>
 </section>
+
+
