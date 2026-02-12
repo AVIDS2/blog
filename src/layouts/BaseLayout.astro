@@ -1,6 +1,5 @@
 ﻿---
 import SiteHeader from "../components/SiteHeader.astro";
-import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import { detectLocaleFromPath, type SiteLocale } from "../utils/i18n";
 
@@ -64,7 +63,6 @@ const rssHref = isZh ? "/rss.xml" : "/en/rss.xml";
     <link rel="alternate" type="application/rss+xml" title="DWILL Blog RSS" href={rssHref} />
   </head>
   <body>
-    <ClientRouter />
     <div class="site-shell">
       <SiteHeader />
       <main class:list={["container", "page-main", { "page-main-home": isHomePage }]}>
