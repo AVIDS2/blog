@@ -1,8 +1,8 @@
-# DWILL Blog
+# Shadcn Blog
 
 Production-ready Astro blog for `blog2.dwill.top`.
 
-Repository: <https://github.com/AVIDS2/blog>
+Repository: [https://github.com/AVIDS2/blog](https://github.com/AVIDS2/blog)
 
 ## Highlights
 

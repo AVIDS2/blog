@@ -84,6 +84,14 @@ $$
 - 正文图按列宽导出，不要上传 4K 原图。
 - 命名统一：`/public/images/posts/{slug}/...`
 
+### 03.2.1 媒体渲染压测（图片 + GIF）
+
+![压测图片 1](https://images.unsplash.com/photo-1770885653391-5cd1f045aba8?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D)
+
+![压测图片 2](https://images.unsplash.com/photo-1641141109253-6c1fc4f53e66?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2lmc3xlbnwwfHwwfHx8MA%3D%3D)
+
+![压测 GIF](https://media.tenor.com/NDTi9GwBHUAAAAAM/gif-tenor.gif)
+
 ### 03.3 何时加客户端脚本
 
 只有在交互带来明确价值时再加，比如图表、搜索建议、局部动效。
