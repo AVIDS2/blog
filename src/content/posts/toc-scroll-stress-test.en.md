@@ -47,6 +47,14 @@ $$
 T_{user} \approx T_{network} + T_{html} + T_{paint} + T_{js}
 $$
 
+### 03.1 Media Rendering Stress Test (Images + GIF)
+
+![Stress Image 1](https://images.unsplash.com/photo-1770885653391-5cd1f045aba8?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D)
+
+![Stress Image 2](https://images.unsplash.com/photo-1641141109253-6c1fc4f53e66?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2lmc3xlbnwwfHwwfHx8MA%3D%3D)
+
+![Stress GIF](https://media.tenor.com/NDTi9GwBHUAAAAAM/gif-tenor.gif)
+
 ## 04. Markdown Rendering Baseline
 
 ### 04.1 Table rendering
