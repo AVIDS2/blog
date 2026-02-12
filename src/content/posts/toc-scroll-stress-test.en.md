@@ -12,15 +12,24 @@ This article is intentionally long. Its purpose is to validate the full renderin
 
 ## 01. Goals and Constraints
 
-The blog should be lightweight, migration-friendly, and maintainable for years.
+The blog should not only "work", but remain operable, portable, and maintainable over time.
+
+- Markdown is the single source of truth.
+- Build output stays pure static HTML.
+- Runtime scripts stay minimal.
+- The architecture must support future VPS migration via `git pull + build`.
 
 ### 01.1 What we avoid
 
-We avoid introducing heavy runtime CMS coupling too early.
+Most failures come from front-loading complexity. Introducing CMS/database/auth too early raises long-term maintenance cost.
 
 ### 01.2 Why static-first
 
-A static output architecture keeps hosting portable and operational complexity low.
+A static-first architecture keeps operations simple and hosting portable.
+
+### 01.3 Core assumption
+
+Content lifecycle is longer than platform lifecycle. You may change CDN, server, or build stack, but content should remain stable.
 
 ## 02. Information Architecture
 
@@ -37,9 +46,15 @@ Recommended paths:
 - `/posts/{slug}/`
 - `/tags/{tag}/`
 
-### 02.2 Tag strategy
+### 02.2 Slug naming recommendation
 
-Use a stable finite taxonomy instead of creating ad-hoc tags per article.
+- Lowercase English + hyphen.
+- Avoid Chinese slugs for cross-system stability.
+- Do not change slugs after publishing.
+
+### 02.3 Tag taxonomy recommendation
+
+Keep tag count bounded (for example 20-40 stable topics) and avoid creating one-off tags for every post.
 
 ## 03. Performance Model
 
@@ -47,13 +62,33 @@ $$
 T_{user} \approx T_{network} + T_{html} + T_{paint} + T_{js}
 $$
 
-### 03.1 Media Rendering Stress Test (Images + GIF)
+The static-site advantage is minimizing `T_js` so first-view latency depends mostly on network + HTML.
+
+### 03.1 Above-the-fold budget
+
+Practical baseline:
+
+- First-screen CSS < 70KB (gzip)
+- First-screen JS < 80KB (gzip)
+- LCP < 2.0s (4G simulation)
+
+### 03.2 Image strategy
+
+- Use `webp/avif` for cover images.
+- Export body images near content width; avoid raw 4K uploads.
+- Keep naming deterministic under `/public/images/posts/{slug}/...`.
+
+### 03.2.1 Media rendering stress test (images + GIF)
 
 ![Stress Image 1](https://images.unsplash.com/photo-1770885653391-5cd1f045aba8?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D)
 
 ![Stress Image 2](https://images.unsplash.com/photo-1641141109253-6c1fc4f53e66?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2lmc3xlbnwwfHwwfHx8MA%3D%3D)
 
 ![Stress GIF](https://media.tenor.com/NDTi9GwBHUAAAAAM/gif-tenor.gif)
+
+### 03.3 When to add client-side scripts
+
+Add runtime JS only when interaction value is explicit (charts, search suggestion, focused motion).
 
 ## 04. Markdown Rendering Baseline
 
@@ -83,13 +118,19 @@ export function toRoute(meta: PostMeta): string {
 
 ### 04.3 Math rendering
 
-Inline: $E = mc^2$.
+Inline example: $E = mc^2$.
 
-Block:
+Block example:
 
 $$
 \text{Score}_{seo} = 0.4 \cdot C + 0.3 \cdot I + 0.3 \cdot U
 $$
+
+Where:
+
+- $C$: content quality
+- $I$: index coverage
+- $U$: URL stability
 
 ### 04.4 ECharts rendering
 
@@ -122,28 +163,118 @@ $$
 
 ## 05. SEO Infrastructure
 
+SEO is not keyword stuffing. The core is discoverability + machine readability + sustainable updates.
+
+### 05.1 Required technical items
+
 - `sitemap.xml`
 - `rss.xml`
 - canonical
 - Open Graph / Twitter cards
 - JSON-LD article metadata
 
-## 06. TOC Behavior Requirements
+### 05.2 Content strategy
 
-### 06.1 Scroll-driven highlighting
+- Each post should solve one concrete problem.
+- Avoid vague headline wording.
+- Provide the answer early, then expand.
 
-TOC active state must follow scroll position.
+### 05.3 Topic clusters
 
-### 06.2 Responsive layout
+Series around stable themes accumulate authority better than random disconnected topics.
 
-Desktop uses right-side sticky TOC. Mobile uses collapsed TOC.
+## 06. Multilingual Strategy
 
-## 07. Publishing Workflow
+You already decided on language switching. Recommended approach is independent content per locale.
 
-1. Draft outline first.
-2. Expand section by section.
-3. Validate rendering before publishing.
+### 06.1 Recommended approach
 
-## 08. Final Note
+- One Markdown file per language.
+- Link variants through `translationKey`.
+- Language switch should jump to the corresponding localized page.
 
-If these baseline capabilities are stable, visual effects can be optimized afterward without breaking the core publishing flow.
+### 06.2 Why not front-end text-only replacement
+
+Replacing only UI labels does not cover article body and is weak for language-specific indexing.
+
+### 06.3 Fallback when translation is missing
+
+If a target locale is missing:
+
+- fallback to default locale
+- show a clear "translation not available yet" message
+
+## 07. TOC UX Requirements
+
+TOC is navigation infrastructure for long-form content, not decoration.
+
+### 07.1 Highlighting rules
+
+- Active state follows scroll position.
+- Click on TOC item should immediately highlight the item.
+- Highlighting should remain correct after resize/zoom changes.
+
+### 07.2 Desktop and mobile
+
+- Desktop: right-side sticky TOC.
+- Mobile: collapsible TOC to protect content width.
+
+### 07.3 Visual rhythm
+
+TOC should stay subtle while active sections remain clearly identifiable.
+
+## 08. Content Production Workflow
+
+Standardize writing flow so the system supports you, not the other way around.
+
+### 08.1 Writing process
+
+1. Draft 5-8 section headings first.
+2. Keep each paragraph focused on one point.
+3. Add images/links after core writing is complete.
+
+### 08.2 Working with AI
+
+- You define structure and opinions.
+- AI helps expand and polish.
+- Final fact/tone review stays human.
+
+### 08.3 Pre-publish checklist
+
+- Title/description length is reasonable.
+- TOC hierarchy is clean.
+- Code/charts are readable.
+- Mobile reading experience is acceptable.
+
+## 09. Maintainability and Migration
+
+### 09.1 Why static sites migrate easily
+
+Content and hosting platform are naturally decoupled. Build output is regular files deployable on any web server.
+
+### 09.2 Migration from Cloudflare to VPS
+
+Minimal steps:
+
+1. `git pull`
+2. `npm ci`
+3. `npm run build`
+4. serve `dist/` via Nginx
+
+### 09.3 Minimal operations surface
+
+- reduce runtime services
+- reduce online dependencies
+- move complexity to build time
+
+## 10. Final Note
+
+If you optimize for "looks powerful", the project gets heavier. If you optimize for long-term operation, it gets more stable.
+
+This long-form post is designed to test TOC behavior and rendering reliability. Scroll through and verify:
+
+- TOC highlighting remains stable
+- ECharts renders correctly
+- tables and formulas stay readable on mobile
+
+After these fundamentals are stable, then optimize homepage visual effects.
