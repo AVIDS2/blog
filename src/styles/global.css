@@ -1428,6 +1428,11 @@ select:focus-visible {
 .prose-flow {
   margin-top: 1.2rem;
   color: #27272a;
+  --prose-accent: #d9469a;
+  --prose-accent-soft: #fdf2f8;
+  --prose-code-bg: #f5f3ff;
+  --prose-code-border: #e9d5ff;
+  --prose-code-fg: #c0267a;
 }
 
 .prose-flow > * + * {
@@ -1444,6 +1449,8 @@ select:focus-visible {
 
 .prose-flow h2 {
   font-size: clamp(1.45rem, 3.6vw, 2.2rem);
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #ece7ef;
 }
 
 .prose-flow h3 {
@@ -1471,6 +1478,10 @@ select:focus-visible {
 .prose-flow ul,
 .prose-flow ol {
   padding-left: 1.25rem;
+}
+
+.prose-flow li::marker {
+  color: var(--prose-accent);
 }
 
 .prose-flow img {
@@ -1511,8 +1522,13 @@ select:focus-visible {
 }
 
 .prose-flow th {
-  background: #f8f8f8;
-  color: #27272a;
+  background: #fbf0f6;
+  color: #9d174d;
+  font-weight: 700;
+}
+
+.prose-flow tr:nth-child(even) td {
+  background: #fcfcfd;
 }
 
 .prose-flow pre {
@@ -1534,11 +1550,26 @@ select:focus-visible {
 }
 
 .prose-flow :not(pre) > code {
-  border: 1px solid var(--border);
+  border: 1px solid var(--prose-code-border);
   border-radius: 6px;
-  padding: 0.08rem 0.3rem;
-  background: #f4f4f5;
-  color: #27272a;
+  padding: 0.08rem 0.34rem;
+  background: var(--prose-code-bg);
+  color: var(--prose-code-fg);
+  font-weight: 600;
+}
+
+.prose-flow strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.prose-flow blockquote {
+  margin: 1.04rem 0;
+  padding: 0.72rem 0.9rem;
+  border-left: 3px solid var(--prose-accent);
+  border-radius: 0 10px 10px 0;
+  background: linear-gradient(90deg, var(--prose-accent-soft), rgba(253, 242, 248, 0.2));
+  color: #3f3f46;
 }
 
 .heading-anchor {
