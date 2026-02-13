@@ -2070,8 +2070,9 @@ h3:hover .heading-anchor {
 
   .prose-flow table {
     display: block;
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
