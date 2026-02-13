@@ -458,7 +458,7 @@ select:focus-visible {
 }
 
 .home-hero-wrap {
-  width: min(1680px, 100%);
+  width: 100%;
   margin-inline: auto;
 }
 
@@ -522,9 +522,13 @@ select:focus-visible {
   color: #18181b;
   text-transform: uppercase;
   white-space: nowrap;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 240ms ease;
   z-index: 5;
+}
+
+.hero-stage.is-animated .hero-fallback-title {
+  opacity: 0;
 }
 
 .hero-fallback-title.is-visible {

@@ -63,6 +63,7 @@ const isEn = locale === "en-US";
 
       const mediaReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (mediaReduce.matches) {
+        root.classList.remove("is-animated");
         root.classList.add("is-reduced");
         fallbackTitle.classList.add("is-visible");
         heroCopy.classList.add("is-visible");
@@ -74,6 +75,7 @@ const isEn = locale === "en-US";
 
       const ctx = canvas.getContext("2d", { alpha: true });
       if (!ctx) {
+        root.classList.remove("is-animated");
         root.classList.add("is-reduced");
         fallbackTitle.classList.add("is-visible");
         heroCopy.classList.add("is-visible");
@@ -82,6 +84,7 @@ const isEn = locale === "en-US";
         actionItems.forEach((item) => item.classList.add("is-on"));
         return;
       }
+      root.classList.add("is-animated");
       fallbackTitle.classList.remove("is-visible");
       fallbackTitle.style.opacity = "0";
 
@@ -448,13 +451,14 @@ const isEn = locale === "en-US";
       function getScenePose(liftProgress, elapsed) {
         const t = elapsed * 0.001;
         const growth = easeInOutCubic(liftProgress);
-        const orbitAmp = easeOutCubic(liftProgress);
+        // Keep a non-zero orbital baseline so early geometry already feels 3D.
+        const orbitAmp = lerp(0.34, 1, easeOutCubic(liftProgress));
         return {
-          yaw: t * 0.16 + Math.sin(t * 0.29) * 0.1 * orbitAmp,
-          pitch: lerp(-0.92, -0.78, growth) + Math.sin(t * 0.22) * 0.1 * orbitAmp,
-          roll: Math.sin(t * 0.17) * 0.05 * orbitAmp,
-          scale: lerp(0.72, 0.96, growth),
-          zTranslate: lerp(-500, -210, growth),
+          yaw: t * 0.2 + Math.sin(t * 0.29) * 0.12 * orbitAmp,
+          pitch: lerp(-0.84, -0.76, growth) + Math.sin(t * 0.22) * 0.11 * orbitAmp,
+          roll: 0.02 + Math.sin(t * 0.17) * 0.06 * orbitAmp,
+          scale: lerp(0.78, 0.96, growth),
+          zTranslate: lerp(-440, -210, growth),
           camera: 1460,
         };
       }
@@ -478,11 +482,14 @@ const isEn = locale === "en-US";
         const wideT = clamp((aspect - 1) / 1.2, 0, 1);
         const diameterScale = 1.6;
         const growth = easeInOutCubic(liftProgress);
+        // Avoid near-zero thickness in the early funnel stage.
+        const radialGrowth = lerp(0.22, 1, growth);
+        const depthGrowth = lerp(0.28, 1, growth);
 
         const radiusTarget = base * lerp(0.42, 0.34, wideT) * diameterScale;
-        const radius = radiusTarget * growth;
+        const radius = radiusTarget * radialGrowth;
         const zExtentTarget = Math.min(height * 0.62, base * lerp(0.84, 0.96, wideT));
-        const zExtent = zExtentTarget * growth;
+        const zExtent = zExtentTarget * depthGrowth;
 
         const angle = u;
         return worldToScreen(
@@ -500,11 +507,13 @@ const isEn = locale === "en-US";
         const aspect = width / Math.max(1, height);
         const wideT = clamp((aspect - 1) / 1.2, 0, 1);
         const growth = easeInOutCubic(liftProgress);
+        const radialGrowth = lerp(0.24, 1, growth);
+        const depthGrowth = lerp(0.3, 1, growth);
 
         const zExtentTarget = Math.min(height * 0.44, base * lerp(0.62, 0.72, wideT));
-        const zExtent = zExtentTarget * growth;
+        const zExtent = zExtentTarget * depthGrowth;
         const peakRadiusTarget = base * lerp(0.28, 0.24, wideT);
-        const peakRadius = peakRadiusTarget * growth;
+        const peakRadius = peakRadiusTarget * radialGrowth;
         const absV = Math.abs(v);
         const radial = peakRadius * (1 - absV); // octahedron-like linear profile
         const angle = u;
