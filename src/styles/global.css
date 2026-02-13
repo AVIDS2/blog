@@ -1724,6 +1724,10 @@ h3:hover .heading-anchor {
 }
 
 @media (max-width: 700px) {
+  :root {
+    --page-gutter: clamp(14px, 4.8vw, 20px);
+  }
+
   .container {
     width: min(100%, calc(100% - (var(--page-gutter) * 2)));
   }
@@ -1885,10 +1889,24 @@ h3:hover .heading-anchor {
     letter-spacing: -0.02em;
   }
 
+  .article-meta {
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
   .article-header h1 {
-    font-size: clamp(1.96rem, 11vw, 2.6rem);
-    line-height: 1.06;
-    letter-spacing: -0.012em;
+    font-size: clamp(1.68rem, 8.7vw, 2.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin-top: 0.48rem;
+    margin-bottom: 0.58rem;
+    max-width: 18ch;
+  }
+
+  .article-description {
+    font-size: 1rem;
+    line-height: 1.72;
+    color: #52525b;
   }
 
   .page-masthead-subtitle {
@@ -2066,6 +2084,52 @@ h3:hover .heading-anchor {
 
   .toc-mobile {
     display: block;
+    margin-top: 0.9rem;
+    border-radius: 14px;
+    background: #fcfcfd;
+    padding: 0.72rem 0.78rem;
+  }
+
+  .toc-mobile > summary {
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: #27272a;
+  }
+
+  .prose-flow {
+    margin-top: 1.08rem;
+  }
+
+  .prose-flow > * + * {
+    margin-top: 1.08rem;
+  }
+
+  .prose-flow h2,
+  .prose-flow h3 {
+    margin-top: 1.94rem;
+    margin-bottom: 0.56rem;
+    line-height: 1.2;
+  }
+
+  .prose-flow h2 {
+    font-size: clamp(1.52rem, 7vw, 1.92rem);
+  }
+
+  .prose-flow h3 {
+    font-size: clamp(1.22rem, 5.4vw, 1.46rem);
+  }
+
+  .prose-flow p,
+  .prose-flow li {
+    font-size: 1.02rem;
+    line-height: 1.86;
+    color: #45454f;
+  }
+
+  .prose-flow ul,
+  .prose-flow ol {
+    padding-left: 1.1rem;
   }
 
   .prose-flow table {

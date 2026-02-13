@@ -9,3 +9,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Ignore pasted screenshot assets in post draft image folder
+src/content/posts/image/**/*.png
+
